@@ -1,7 +1,8 @@
 // ==================================================
-// Project          : ESP32 Dual Motor Low-Level Controller
-// File Name        : new.ino
-// Target MCU       : ESP32-WROOM-32 (Dual Core Execution)
+// Project          : ESP32 Dual Motor Controller
+// File Name        : skidsteer-firmware.ino
+// Created          : Jul 11, 2026
+// Author           : Pham Duc Duy
 // Framework        : Arduino (ESP32 core)
 // Description      : Real-time dual-core differential drive motor management utilizing 
 //                    Modbus master protocols over an RS485 transceiver network.
