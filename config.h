@@ -1,6 +1,9 @@
 // ==================================================
 // Project          : ESP32 Dual Motor Controller
 // File Name        : config.h
+// Created          : Jul 11, 2026
+// Author           : Pham Duc Duy
+// Framework        : Arduino (ESP32 core)
 // Description      : Centralized hardware pinouts, software execution thresholds, 
 //                    and absolute RC transmitter input calibrations.
 // ==================================================
