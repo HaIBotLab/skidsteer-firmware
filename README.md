@@ -1,2 +1,13 @@
 # skidsteer-firmware
-ESP32 | FreeRTOS | micro-ROS | Modbus RTU | RS485
+
+#### Pre-Source
+```bash
+https://github.com/phamduyaaaa/esp32-freertos-ros2
+```
+#### Dev
+```bash
+https://github.com/phamduyaaaa/ESP32-dev-notebook
+```
+
+#### Note
+- Update in the future
