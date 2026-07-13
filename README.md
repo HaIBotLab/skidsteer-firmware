@@ -1,4 +1,4 @@
-# skidsteer-firmware
+# skidsteer-firmware (None-ROS | Only MC6C)
 
 #### Pre-Source
 ```bash
