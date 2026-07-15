@@ -151,7 +151,7 @@ void Task1(void *pvParameters)
         // Chiếm quyền bus RS485 để đẩy lệnh
         if (xSemaphoreTake(uartSemaphore, portMAX_DELAY) == pdTRUE) {
             const int64_t t0 = esp_timer_get_time();
-            driverL.set_rpm(rpm_left, rpm_left);
+            driverL.set_rpm(rpm_left, -rpm_left);
             driverL.get_rpm(fb_left);
             io_latency_us = esp_timer_get_time() - t0;
             xSemaphoreGive(uartSemaphore);
@@ -200,14 +200,14 @@ void Task2(void *pvParameters)
             int16_t tr_unused = 0;
             rpm_right = compute_rc_rpm_right(local_pw2, local_pw4, local_move_range, tr_unused);
         } else {
-            rpm_right = g_ros_rpm_right;
+            rpm_right = -g_ros_rpm_right;
         }
 
         rpm_right = constrain(rpm_right, -local_move_range, local_move_range);
 
         if (xSemaphoreTake(uartSemaphore, portMAX_DELAY) == pdTRUE) {
             const int64_t t0 = esp_timer_get_time();
-            driverR.set_rpm(rpm_right, rpm_right);
+            driverR.set_rpm(rpm_right, -rpm_right);
             driverR.get_rpm(fb_right);
             io_latency_us = esp_timer_get_time() - t0;
             xSemaphoreGive(uartSemaphore);
