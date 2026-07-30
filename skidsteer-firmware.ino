@@ -1,9 +1,10 @@
 // ==================================================
 // Project          : ESP32 Dual Motor Controller
-// File Name        : skidsteer-firmware.ino (new_2.ino)
+// File Name        : skidsteer-firmware.ino 
 // Framework        : Arduino (ESP32 core)
 // Description      : Real-time dual-core differential drive motor management.
 //                    Features Thread-Safe micro-ROS logging via Queue.
+// Author           : Pham Duc Duy
 // ==================================================
 
 #include <ModbusMaster.h>
@@ -11,7 +12,7 @@
 #include <stdint.h>
 #include "config.h"
 #include "debug.h"
-#include "micro_ros_handler.h"   // Xử lý micro-ROS và Logging Queue
+#include "micro_ros_handler.h"   
 
 // ==================================================
 // GLOBAL PERIPHERAL & DRIVER INSTANCES
