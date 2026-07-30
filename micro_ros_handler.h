@@ -109,8 +109,17 @@ static bool _ros_do_init(void)
     if (RMW_RET_OK != rmw_uros_ping_agent(ROS_AGENT_PING_MS, ROS_AGENT_PING_ATTEMPTS)) {
         return false;
     }
+    //Set domain ID = 30 qua init options
+    rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
+    rcl_init_options_init(&init_options, s_allocator);
+    rcl_init_options_set_domain_id(&init_options, 30);  // ← domain 30
+    
+    RC_INIT_CHECK(rclc_support_init_with_options(
+        &s_support, 0, NULL, &init_options, &s_allocator));
+    
+    rcl_init_options_fini(&init_options);  // giải phóng bộ nho
 
-    RC_INIT_CHECK(rclc_support_init(&s_support, 0, NULL, &s_allocator));
+    //RC_INIT_CHECK(rclc_support_init(&s_support, 0, NULL, &s_allocator));
     RC_INIT_CHECK(rclc_node_init_default(&s_node, ROS_NODE_NAME, "", &s_support));
 
     RC_INIT_CHECK(rclc_publisher_init_default(
@@ -127,7 +136,7 @@ static bool _ros_do_init(void)
         &s_sub_wheel_rpm, &s_node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32MultiArray),
         "wheel_rpm"));
-
+        
     RC_INIT_CHECK(rclc_executor_init(&s_executor, &s_support.context, ROS_EXECUTOR_HANDLES, &s_allocator));
     RC_INIT_CHECK(rclc_executor_add_subscription(
         &s_executor, &s_sub_wheel_rpm, &s_msg_wheel_rpm, &_cb_wheel_rpm, ON_NEW_DATA));
@@ -151,6 +160,9 @@ static void _ros_do_teardown(void)
     g_ros_cmd_fresh = false;
     g_ros_rpm_left  = 0;
     g_ros_rpm_right = 0;
+
+    // Them : reset transport 
+    //set_microros_transports();
 }
 
 // ==================================================
@@ -161,13 +173,12 @@ static void _ros_task(void *pv)
     (void)pv;
     uint32_t pub_tick = 0;
     char rx_log_buf[ROS_LOG_MAX_LEN];
-`
     for (;;) {
         if (!g_ros_connected) {
             if (_ros_do_init()) {
                 g_ros_connected = true;
             } else {
-                //_ros_do_teardown();
+                _ros_do_teardown();                              // bo cmt dong nay 
                 vTaskDelay(pdMS_TO_TICKS(ROS_AGENT_PING_MS));
                 continue;
             }
