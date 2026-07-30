@@ -1,9 +1,7 @@
 // ==================================================
 // Project          : ESP32 Dual Motor Controller
 // File Name        : debug.h
-// Created          : Jul 11, 2026
-// Author           : Pham Duc Duy
-// Description      : Unified logging layout using static buffer allocation
+// Description      : Thread-safe Logging to micro-ROS topic /zlac_debug
 // ==================================================
 
 #ifndef DEBUG_H
@@ -12,20 +10,25 @@
 #include <Arduino.h>
 #include "config.h"
 
+// Khai báo hàm đẩy log từ file micro_ros_handler.h
+extern void ros_send_debug_log(const char* log_str);
+
 /**
- * @brief Outputs operational telemetry of a specific motor channel formatted onto a single scannable line.
+ * @brief Formats operational telemetry and pushes it to the FreeRTOS ROS-Logging Queue.
  */
 inline void print_motor_log(char core_label, uint32_t counter, float profile, 
-                            unsigned long pw2, unsigned long pw4, unsigned long pw5, 
+                            unsigned long pw2, unsigned long pw4, unsigned long pw5, unsigned long pw6,
                             int16_t target_rpm, int16_t fb1, int16_t fb2, 
-                            int64_t latency)
+                            int64_t latency, bool is_rc_mode)
 {
 #if ENABLE_DEBUG
-  char log_buf[160];
+  char log_buf[180];
   snprintf(log_buf, sizeof(log_buf), 
-           "[%c #%04u] PROFILE:%.2f | RAW_RC[CH2:%4lu CH4:%4lu CH5:%4lu] | Target_RPM:%4d | FB_RPM[%c1:%4d %c2:%4d] | Latency:%lld us",
-           core_label, counter, profile, pw2, pw4, pw5, target_rpm, core_label, fb1, core_label, fb2, latency);
-  Serial.println(log_buf);
+           "[%c #%04u] MODE:%s | PROF:%.2f | RC[CH2:%4lu CH4:%4lu CH5:%4lu CH6:%4lu] | RPM:%4d | FB:%4d | Lat:%lld us",
+           core_label, counter, is_rc_mode ? "RC_MANUAL" : "ROS_AUTO", profile, pw2, pw4, pw5, pw6, target_rpm, fb1, latency);
+           
+  // Gửi vào hàng đợi thay vì in ra Serial USB gây nhiễu micro-ROS
+  ros_send_debug_log(log_buf);
 #endif
 }
 
