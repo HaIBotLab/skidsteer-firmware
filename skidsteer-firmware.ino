@@ -152,7 +152,7 @@ void Task1(void *pvParameters)
         // Chiếm quyền bus RS485 để đẩy lệnh
         if (xSemaphoreTake(uartSemaphore, portMAX_DELAY) == pdTRUE) {
             const int64_t t0 = esp_timer_get_time();
-            driverL.set_rpm(rpm_left, -rpm_left);
+            driverL.set_rpm(rpm_left, rpm_left);
             driverL.get_rpm(fb_left);
             io_latency_us = esp_timer_get_time() - t0;
             xSemaphoreGive(uartSemaphore);
@@ -208,7 +208,7 @@ void Task2(void *pvParameters)
 
         if (xSemaphoreTake(uartSemaphore, portMAX_DELAY) == pdTRUE) {
             const int64_t t0 = esp_timer_get_time();
-            driverR.set_rpm(rpm_right, -rpm_right);
+            driverR.set_rpm(rpm_right, rpm_right);
             driverR.get_rpm(fb_right);
             io_latency_us = esp_timer_get_time() - t0;
             xSemaphoreGive(uartSemaphore);
@@ -368,5 +368,21 @@ void setup()
 // ==================================================
 void loop()
 {
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    Serial.println("ROS LOOP");
+    vTaskDelay(pdMS_TO_TICKS(10));
+    noInterrupts();
+    unsigned long pw4 = pulseWidth4;
+    interrupts();
+
+    Serial.print("CH4 = ");
+    Serial.println(pw4);
+    Serial.print("LEFT RPM = ");
+    Serial.print(g_fb_rpm_left);
+
+    Serial.print(" | RIGHT RPM = ");
+    Serial.println(g_fb_rpm_right);
+     
+
+    delay(200);
+
 }

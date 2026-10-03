@@ -171,12 +171,15 @@ static void _ros_do_teardown(void)
 static void _ros_task(void *pv)
 {
     (void)pv;
-    uint32_t pub_tick = 0;
+    //uint32_t pub_tick = 0;
     char rx_log_buf[ROS_LOG_MAX_LEN];
+    uint32_t last_pub = micros();
     for (;;) {
+        
         if (!g_ros_connected) {
             if (_ros_do_init()) {
                 g_ros_connected = true;
+                last_pub = micros();
             } else {
                 _ros_do_teardown();                              // bo cmt dong nay 
                 vTaskDelay(pdMS_TO_TICKS(ROS_AGENT_PING_MS));
@@ -185,17 +188,17 @@ static void _ros_task(void *pv)
         }
 
         // 1. Quét sự kiện từ máy tính (Timeout 2ms để Task chạy nhanh)
-        rcl_ret_t ret = rclc_executor_spin_some(&s_executor, RCL_MS_TO_NS(2));
-        
+        rcl_ret_t ret = rclc_executor_spin_some(&s_executor, RCL_MS_TO_NS(0));
+        //rcl_ret_t ret = RCL_RET_OK;
         // CHỈ ngắt kết nối khi có lỗi thực sự, phớt lờ RCL_RET_TIMEOUT
         if (ret != RCL_RET_OK && ret != RCL_RET_TIMEOUT) {
             _ros_do_teardown();
             continue;
         }
 
-        // 2. Gửi phản hồi Encoder (Định kỳ ~250ms = 25 chu kỳ * 10ms)
-        if (++pub_tick >= 25) {
-            pub_tick = 0;
+        // 2. Gửi phản hồi Encoder (chu kỳ 33333 micro giây)2000020000
+        if (micros() - last_pub >= 20000) {// sửa tần với đơn vị micro giây
+            last_pub += 20000;// sửa tần
             s_msg_encoder.data.data[0] = (int32_t)g_fb_rpm_left;
             s_msg_encoder.data.data[1] = (int32_t)g_fb_rpm_right;
             RCSOFTCHECK(rcl_publish(&s_pub_encoder, &s_msg_encoder, NULL));
