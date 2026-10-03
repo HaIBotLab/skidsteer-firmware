@@ -361,6 +361,8 @@ void setup()
     xTaskCreatePinnedToCore(Task2, "Task_Motor_R", STACK_SIZE, NULL, 3, &xTask2Handle, 1);
 
     digitalWrite(LED_PIN, LOW);
+    
+    
 }
 
 // ==================================================
