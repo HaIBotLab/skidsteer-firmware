@@ -61,28 +61,29 @@ const uint16_t top_backward_threshold     = 1480;
 
 const uint16_t bottom_turnleft_threshold  = 1180;
 const uint16_t top_turnleft_threshold     = 1390;
-const uint16_t bottom_turnright_threshold = 1510;
-const uint16_t top_turnright_threshold    = 1700;
+const uint16_t bottom_turnright_threshold = 1537;
+const uint16_t top_turnright_threshold    = 1720;
 
 // ==================================================
 // RC HARDWARE LINEAR MAPPING BOUNDARIES (Microseconds)
 // ==================================================
-const uint16_t RC_CH2_MIN_FORWARD  = 1571;
-const uint16_t RC_CH2_MAX_FORWARD  = 1850;
-const uint16_t RC_CH2_MIN_BACKWARD = 1280;
-const uint16_t RC_CH2_MAX_BACKWARD = 1538;
-
-const uint16_t RC_CH4_MIN_LEFT     = 1470;
-const uint16_t RC_CH4_MAX_LEFT     = 1690;
-const uint16_t RC_CH4_MIN_RIGHT    = 1200;
-const uint16_t RC_CH4_MAX_RIGHT    = 1448;
+//CH2 MIN=1300 NORM=1555 MAX=1805 
+const uint16_t RC_CH2_MIN_FORWARD  = 1570;
+const uint16_t RC_CH2_MAX_FORWARD  = 1800;
+const uint16_t RC_CH2_MIN_BACKWARD = 1305;
+const uint16_t RC_CH2_MAX_BACKWARD = 1535;
+//CH4 MIN=1211 NORM=1460 MAX=1700
+const uint16_t RC_CH4_MIN_LEFT     = 1480;
+const uint16_t RC_CH4_MAX_LEFT     = 1700;
+const uint16_t RC_CH4_MIN_RIGHT    = 1210;
+const uint16_t RC_CH4_MAX_RIGHT    = 1430;
 
 // ==================================================
 // CH5 PROFILE MULTIPLIER COEFFICIENTS (k-Factors)
 // ==================================================
 const float RC_CH5_K0               = 1.0f;  // Baseline
 const float RC_CH5_K1               = 1.5f;  // Medium speed
-const float RC_CH5_K2               = 2.0f;  // Maximum performance
+const float RC_CH5_K2               = 1.8f;  // Maximum performance
 
 // CH5 Profile Threshold Boundaries (Microseconds)
 const uint16_t bottom_mock_0_threshold = 1600;
@@ -103,13 +104,13 @@ const uint16_t ch6_threshold = 1500;
 // BASELINE MOTION DYNAMICS (PROFILE LEVEL 0)
 // ==================================================
 const int16_t BASE_MOVE_RANGE      = 100;  // Reference maximum target RPM boundary
-const int16_t BASE_ROTATE_IN_PLACE = 9;    // High denominator = smooth rotation in place
+const int16_t BASE_ROTATE_IN_PLACE = 6;    // High denominator = smooth rotation in place
 const int16_t BASE_MOVE_AND_TURN   = 4;    // Medium denominator = standard steering split
 
 // ==================================================
 // DEBUG
 // ==================================================
-bool debug = false;
+bool debug = true;
 
 void error_loop();
 #endif // CONFIG_H
